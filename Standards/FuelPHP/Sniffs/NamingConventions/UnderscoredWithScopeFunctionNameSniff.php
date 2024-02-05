@@ -232,7 +232,7 @@ class FuelPHP_Sniffs_NamingConventions_UnderscoredWithScopeFunctionNameSniff
                 continue;
             }
 
-            if ($bit{0} !== strtolower($bit{0})) {
+            if ($bit[0] !== strtolower($bit[0])) {
                 $validName = false;
                 break;
             }
