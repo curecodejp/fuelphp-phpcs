@@ -1,33 +1,22 @@
 <?php
-
 /**
- * FuelPHP_Sniffs_Formatting_BracesOnNewLineSniff.
+ * BracesOnNewLineSniff.
  *
- * PHP version 5
+ * Check that each brace of a control structure is on a new line.
  *
  * @category  PHP
  * @package   PHP_CodeSniffer
  * @author    Eric VILLARD <dev@eviweb.fr>
  * @copyright 2012 Eric VILLARD <dev@eviweb.fr>
  * @license   http://opensource.org/licenses/MIT MIT License
- * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-/**
- * FuelPHP_Sniffs_Formatting_BracesOnNewLineSniff.
- *
- * check that each brace of a control structure is on a new line
- *
- * @category  PHP
- * @package   PHP_CodeSniffer
- * @author    Eric VILLARD <dev@eviweb.fr>
- * @copyright 2012 Eric VILLARD <dev@eviweb.fr>
- * @license   http://opensource.org/licenses/MIT MIT License
- * @version   Release: 1.0.0
- * @link      http://pear.php.net/package/PHP_CodeSniffer
- */
-class FuelPHP_Sniffs_Formatting_BracesOnNewLineSniff 
-    implements PHP_CodeSniffer_Sniff
+namespace FuelPHP\Sniffs\Formatting;
+
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
+
+class BracesOnNewLineSniff implements Sniff
 {
 
     /**
@@ -54,25 +43,25 @@ class FuelPHP_Sniffs_Formatting_BracesOnNewLineSniff
             T_FOR,
             T_FOREACH,
             T_WHILE,
-            T_SWITCH,            
+            T_SWITCH,
         );
     }
 
     /**
      * Processes this test, when one of its tokens is encountered.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile All the tokens found in the document.
-     * @param int                  $stackPtr  The position of the current token in
-     *                                        the stack passed in $tokens.
+     * @param File $phpcsFile All the tokens found in the document.
+     * @param int  $stackPtr  The position of the current token in
+     *                        the stack passed in $tokens.
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
         $registered = $this->register();
         // ensure we get one of the registered token
-        if (in_array($tokens[$stackPtr]['code'], $registered)) {            
+        if (in_array($tokens[$stackPtr]['code'], $registered)) {
             if (!isset($tokens[$stackPtr]['scope_opener'])
                     || !isset($tokens[$stackPtr]['scope_closer'])) {
                 return;
@@ -81,11 +70,11 @@ class FuelPHP_Sniffs_Formatting_BracesOnNewLineSniff
             $line   = $tokens[$stackPtr]['line'];
             $opener = $tokens[$stackPtr]['scope_opener'];
             $closer = $tokens[$stackPtr]['scope_closer'];
-            
+
             // check opening braces on next line
             if ($tokens[$opener]['line'] !== ($line + 1)) {
                 $error = 'Opening brace must be on next line from its condition';
-                $phpcsFile->addError($error, $stackPtr, 'OpeningBraceOnNextLine');                
+                $phpcsFile->addError($error, $stackPtr, 'OpeningBraceOnNextLine');
             }
             // check correct indentation
             if ($tokens[$opener]['column'] !== $column) {
@@ -100,7 +89,7 @@ class FuelPHP_Sniffs_Formatting_BracesOnNewLineSniff
             // check closing braces on their own lines
             $alone   = true;
             $current = $closer-1;
-            while ($tokens[$current]['line'] === $tokens[$closer]['line'] 
+            while ($tokens[$current]['line'] === $tokens[$closer]['line']
                     && $alone
                     && $current > $opener) {
                 $alone = $tokens[$current]['code'] === T_WHITESPACE;
@@ -108,7 +97,7 @@ class FuelPHP_Sniffs_Formatting_BracesOnNewLineSniff
             }
             if ($alone !== true) {
                 $error = 'Closing brace must be on next line from the content before';
-                $phpcsFile->addError($error, $stackPtr, 'ClosingBraceOnNextLine');               
+                $phpcsFile->addError($error, $stackPtr, 'ClosingBraceOnNextLine');
             }
              // check correct indentation
             if ($tokens[$closer]['column'] !== $column) {
@@ -121,6 +110,6 @@ class FuelPHP_Sniffs_Formatting_BracesOnNewLineSniff
                 $error = 'Closing brace must be followed by EOL char';
                 $phpcsFile->addError($error, $stackPtr, 'ClosingBraceFollowedByEOL');
             }
-        }        
+        }
     }
 }

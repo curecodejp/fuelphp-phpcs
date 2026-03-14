@@ -1,7 +1,7 @@
 {
     "name": "eviweb/fuelphp-phpcs",
-    "type": "library",
-    "description": "PHP Code Sniffer standard for Fuel PHP with dedicated CLI",
+    "type": "phpcodesniffer-standard",
+    "description": "PHP Code Sniffer standard for FuelPHP",
     "license": "MIT",
     "authors": [
         {
@@ -12,25 +12,16 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3"
+        "php": ">=8.0",
+        "squizlabs/php_codesniffer": "^3.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
     },
-    "require-dev" : {
-        "phpunit/phpunit": "^4 || ^5"
+    "require-dev": {
+        "phpunit/phpunit": "^9.6 || ^10.0"
     },
-    "autoload": {
-        "psr-0": {
-            "evidev": "src/"
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev"
-        }
-    },
-    "bin": [
-        "bin/fuelphpcs"
-    ],
-    "scripts": {
-        "phpunit": "phpunit"
     }
 }

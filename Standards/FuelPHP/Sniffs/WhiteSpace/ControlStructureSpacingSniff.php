@@ -1,21 +1,6 @@
 <?php
 /**
- * FuelPHP_Sniffs_WhiteSpace_ControlStructureSpacingSniff.
- *
- * PHP version 5
- *
- * @category  PHP
- * @package   PHP_CodeSniffer
- * @author    Greg Sherwood <gsherwood@squiz.net>
- * @author    Marc McIntyre <mmcintyre@squiz.net>
- * @author    Eric VILLARD <dev@eviweb.fr>
- * @copyright 2006-2012 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
- * @link      http://pear.php.net/package/PHP_CodeSniffer
- */
-
-/**
- * FuelPHP_Sniffs_WhiteSpace_ControlStructureSpacingSniff.
+ * ControlStructureSpacingSniff.
  *
  * Checks that control structures have the correct spacing around brackets.
  *
@@ -26,10 +11,14 @@
  * @author    Eric VILLARD <dev@eviweb.fr>
  * @copyright 2006-2012 Squiz Pty Ltd (ABN 77 084 670 600)
  * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
- * @version   Release: 1.4.7
- * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class FuelPHP_Sniffs_WhiteSpace_ControlStructureSpacingSniff implements PHP_CodeSniffer_Sniff
+
+namespace FuelPHP\Sniffs\WhiteSpace;
+
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
+
+class ControlStructureSpacingSniff implements Sniff
 {
 
     /**
@@ -41,17 +30,17 @@ class FuelPHP_Sniffs_WhiteSpace_ControlStructureSpacingSniff implements PHP_Code
                                    'PHP',
                                    'JS',
                                   );
-    
+
     /**
      * A list of tokenizers that should not be considered as wrong in tests handled
      * by this sniffer
-     * 
+     *
      * @var array
      */
     protected $exceptions = array(
          T_BOOLEAN_NOT,
     );
-    
+
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -76,13 +65,13 @@ class FuelPHP_Sniffs_WhiteSpace_ControlStructureSpacingSniff implements PHP_Code
     /**
      * Processes this test, when one of its tokens is encountered.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile The file being scanned.
-     * @param int                  $stackPtr  The position of the current token
-     *                                        in the stack passed in $tokens.
+     * @param File $phpcsFile The file being scanned.
+     * @param int  $stackPtr  The position of the current token
+     *                        in the stack passed in $tokens.
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -218,16 +207,16 @@ class FuelPHP_Sniffs_WhiteSpace_ControlStructureSpacingSniff implements PHP_Code
     } //end process()
 
     /**
-     * check whether the next token of the current one is an exception
-     * 
-     * @param array     $tokens     list of tokens
-     * @param integer   $ptr        current token index
-     * @return boolean  returns true if the next token is an exception or false
+     * Check whether the next token of the current one is an exception
+     *
+     * @param array   $tokens list of tokens
+     * @param integer $ptr    current token index
+     * @return boolean returns true if the next token is an exception or false
      */
     protected function isNextTokenAnException($tokens, $ptr)
     {
         return in_array($tokens[($ptr + 1)]['code'], $this->exceptions)
             && $tokens[($ptr + 1)]['column'] - $tokens[($ptr)]['column'] == 1;
     }
-    
+
 } //end class
