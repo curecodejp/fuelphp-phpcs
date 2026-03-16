@@ -33,7 +33,7 @@ class ConciseUnderscoredVariableNameSniff implements Sniff
     /**
      * Variable name length limit.
      *
-     * @var integer
+     * @var int
      */
     public $maxlength = 30;
 

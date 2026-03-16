@@ -210,8 +210,8 @@ class ControlStructureSpacingSniff implements Sniff
      * Check whether the next token of the current one is an exception
      *
      * @param array   $tokens list of tokens
-     * @param integer $ptr    current token index
-     * @return boolean returns true if the next token is an exception or false
+     * @param int $ptr    current token index
+     * @return bool returns true if the next token is an exception or false
      */
     protected function isNextTokenAnException($tokens, $ptr)
     {

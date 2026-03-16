@@ -195,7 +195,7 @@ class UnderscoredWithScopeFunctionNameSniff extends AbstractScopeSniff
      *
      * @param string $string The string to verify.
      *
-     * @return boolean
+     * @return bool
      */
     public static function isUnderscoreName($string)
     {
