@@ -1,38 +1,22 @@
 <?php
-
 /**
- * FuelPHP_Sniffs_NamingConventions_ConciseUnderscoredVariableNameSniff.
+ * ConciseUnderscoredVariableNameSniff.
  *
- * PHP version 5
+ * Ensures variable names use underscore format and are not too long.
  *
  * @category  PHP
  * @package   PHP_CodeSniffer
  * @author    Eric VILLARD <dev@eviweb.fr>
  * @copyright 2012 Eric VILLARD <dev@eviweb.fr>
  * @license   http://opensource.org/licenses/MIT MIT License
- * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-if (class_exists('FuelPHP_Sniffs_NamingConventions_UnderscoredWithScopeFunctionNameSniff', true) === false) {
-    throw new PHP_CodeSniffer_Exception(
-        'Class FuelPHP_Sniffs_NamingConventions_UnderscoredWithScopeFunctionNameSniff not found'
-    );
-}
 
-/**
- * FuelPHP_Sniffs_NamingConventions_ConciseUnderscoredVariableNameSniff.
- *
- * Ensures variable names use underscore format and are not too long;
- *
- * @category  PHP
- * @package   PHP_CodeSniffer
- * @author    Eric VILLARD <dev@eviweb.fr>
- * @copyright 2012 Eric VILLARD <dev@eviweb.fr>
- * @license   http://opensource.org/licenses/MIT MIT License
- * @version   Release: 1.0.0
- * @link      http://pear.php.net/package/PHP_CodeSniffer
- */
-class FuelPHP_Sniffs_NamingConventions_ConciseUnderscoredVariableNameSniff
-    implements PHP_CodeSniffer_Sniff
+namespace FuelPHP\Sniffs\NamingConventions;
+
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
+
+class ConciseUnderscoredVariableNameSniff implements Sniff
 {
 
     /**
@@ -47,9 +31,9 @@ class FuelPHP_Sniffs_NamingConventions_ConciseUnderscoredVariableNameSniff
     );
 
     /**
-     * variable name length limit
+     * Variable name length limit.
      *
-     * @var integer
+     * @var int
      */
     public $maxlength = 30;
 
@@ -66,13 +50,13 @@ class FuelPHP_Sniffs_NamingConventions_ConciseUnderscoredVariableNameSniff
     /**
      * Processes this test, when one of its tokens is encountered.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile All the tokens found in the document.
-     * @param int                  $stackPtr  The position of the current token in
-     *                                        the stack passed in $tokens.
+     * @param File $phpcsFile All the tokens found in the document.
+     * @param int  $stackPtr  The position of the current token in
+     *                        the stack passed in $tokens.
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -85,7 +69,7 @@ class FuelPHP_Sniffs_NamingConventions_ConciseUnderscoredVariableNameSniff
 
         $name = $tokens[$stackPtr]['content'];
 
-        if (FuelPHP_Sniffs_NamingConventions_UnderscoredWithScopeFunctionNameSniff::isUnderscoreName($name) === false) {
+        if (UnderscoredWithScopeFunctionNameSniff::isUnderscoreName($name) === false) {
             $error = 'Variable name "%s" does not use underscore format. ' .
                 'Upper case forbidden.';
             $phpcsFile->addError($error, $stackPtr, 'NotUnderscore', array($name));
@@ -98,4 +82,3 @@ class FuelPHP_Sniffs_NamingConventions_ConciseUnderscoredVariableNameSniff
         }
     }
 }
-?>

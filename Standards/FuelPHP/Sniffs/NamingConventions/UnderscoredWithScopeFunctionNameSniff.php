@@ -1,25 +1,6 @@
 <?php
 /**
- * FuelPHP_Sniffs_NamingConventions_UnderscoredWithScopeFunctionNameSniff.
- *
- * PHP version 5
- *
- * @category  PHP
- * @package   PHP_CodeSniffer
- * @author    Eric VILLARD <dev@eviweb.fr>
- * @copyright 2012 Eric VILLARD <dev@eviweb.fr>
- * @license   http://opensource.org/licenses/MIT MIT License
- * @link      http://pear.php.net/package/PHP_CodeSniffer
- */
-
-if (class_exists('PHP_CodeSniffer_Standards_AbstractScopeSniff', true) === false) {
-    throw new PHP_CodeSniffer_Exception(
-        'Class PHP_CodeSniffer_Standards_AbstractScopeSniff not found'
-    );
-}
-
-/**
- * FuelPHP_Sniffs_NamingConventions_UnderscoredWithScopeFunctionNameSniff.
+ * UnderscoredWithScopeFunctionNameSniff.
  *
  * Ensures method names use underscore format and their visibility scope is defined.
  *
@@ -28,11 +9,14 @@ if (class_exists('PHP_CodeSniffer_Standards_AbstractScopeSniff', true) === false
  * @author    Eric VILLARD <dev@eviweb.fr>
  * @copyright 2012 Eric VILLARD <dev@eviweb.fr>
  * @license   http://opensource.org/licenses/MIT MIT License
- * @version   Release: 1.0.0
- * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class FuelPHP_Sniffs_NamingConventions_UnderscoredWithScopeFunctionNameSniff
-    extends PHP_CodeSniffer_Standards_AbstractScopeSniff
+
+namespace FuelPHP\Sniffs\NamingConventions;
+
+use PHP_CodeSniffer\Sniffs\AbstractScopeSniff;
+use PHP_CodeSniffer\Files\File;
+
+class UnderscoredWithScopeFunctionNameSniff extends AbstractScopeSniff
 {
     /**
      * A list of all PHP magic methods.
@@ -56,7 +40,7 @@ class FuelPHP_Sniffs_NamingConventions_UnderscoredWithScopeFunctionNameSniff
                                'invoke',
                                'call',
                               );
-        
+
     /**
      * A list of all PHP magic functions.
      *
@@ -65,13 +49,13 @@ class FuelPHP_Sniffs_NamingConventions_UnderscoredWithScopeFunctionNameSniff
     protected $magicFunctions = array('autoload');
 
     /**
-     * Constructs a FuelPHP_Sniffs_NamingConventions_LowerCaseUnderscoreFunctionNameSniff.
+     * Constructs the sniff.
      */
     public function __construct()
     {
         parent::__construct(
-            array(T_CLASS, T_INTERFACE, T_TRAIT), 
-            array(T_FUNCTION), 
+            array(T_CLASS, T_INTERFACE, T_TRAIT),
+            array(T_FUNCTION),
             true
         );
     }//end __construct()
@@ -79,16 +63,16 @@ class FuelPHP_Sniffs_NamingConventions_UnderscoredWithScopeFunctionNameSniff
     /**
      * Processes the tokens within the scope.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile The file being processed.
-     * @param int                  $stackPtr  The position where this token was
-     *                                        found.
-     * @param int                  $currScope The position of the current scope.
+     * @param File $phpcsFile The file being processed.
+     * @param int  $stackPtr  The position where this token was
+     *                        found.
+     * @param int  $currScope The position of the current scope.
      *
      * @return void
      */
     protected function processTokenWithinScope(
-        PHP_CodeSniffer_File $phpcsFile, 
-        $stackPtr, 
+        File $phpcsFile,
+        $stackPtr,
         $currScope
     ) {
         $methodName = $phpcsFile->getDeclarationName($stackPtr);
@@ -105,12 +89,12 @@ class FuelPHP_Sniffs_NamingConventions_UnderscoredWithScopeFunctionNameSniff
             $magicPart = substr($methodName, 2);
             if (in_array($magicPart, $this->magicMethods) === false) {
                  $error = 'Method name "%s" is invalid; ' .
-                     'only PHP magic methods should be prefixed with a '. 
+                     'only PHP magic methods should be prefixed with a '.
                      'double underscore';
                  $phpcsFile->addError(
                      $error,
                      $stackPtr,
-                     'MethodDoubleUnderscore', 
+                     'MethodDoubleUnderscore',
                      $errorData
                  );
             }
@@ -126,7 +110,7 @@ class FuelPHP_Sniffs_NamingConventions_UnderscoredWithScopeFunctionNameSniff
         // PHP4 destructors are allowed to break our rules.
         if ($methodName === '_'.$className) {
             return;
-        }		
+        }
 
         $methodProps = $phpcsFile->getMethodProperties($stackPtr);
         if ($methodProps['scope_specified'] !== true) {
@@ -163,14 +147,14 @@ class FuelPHP_Sniffs_NamingConventions_UnderscoredWithScopeFunctionNameSniff
     /**
      * Processes the tokens outside the scope.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile The file being processed.
-     * @param int                  $stackPtr  The position where this token was
-     *                                        found.
+     * @param File $phpcsFile The file being processed.
+     * @param int  $stackPtr  The position where this token was
+     *                        found.
      *
      * @return void
      */
     protected function processTokenOutsideScope(
-        PHP_CodeSniffer_File $phpcsFile, $stackPtr
+        File $phpcsFile, $stackPtr
     ) {
         $functionName = $phpcsFile->getDeclarationName($stackPtr);
         if ($functionName === null) {
@@ -184,7 +168,7 @@ class FuelPHP_Sniffs_NamingConventions_UnderscoredWithScopeFunctionNameSniff
         if (preg_match('|^__|', $functionName) !== 0) {
             $magicPart = substr($functionName, 2);
             if (in_array($magicPart, $this->magicFunctions) === false) {
-                $error = 'Function name "%s" is invalid; only PHP magic methods '. 
+                $error = 'Function name "%s" is invalid; only PHP magic methods '.
                     'should be prefixed with a double underscore';
                 $phpcsFile->addError(
                     $error,
@@ -211,7 +195,7 @@ class FuelPHP_Sniffs_NamingConventions_UnderscoredWithScopeFunctionNameSniff
      *
      * @param string $string The string to verify.
      *
-     * @return boolean
+     * @return bool
      */
     public static function isUnderscoreName($string)
     {
@@ -243,5 +227,3 @@ class FuelPHP_Sniffs_NamingConventions_UnderscoredWithScopeFunctionNameSniff
     }//end isUnderscoreName()
 
 }//end class
-
-?>

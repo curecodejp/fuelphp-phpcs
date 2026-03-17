@@ -2,8 +2,6 @@
 /**
  * A test to ensure that arrays conform to the array coding standard.
  *
- * PHP version 5
- *
  * @category  PHP
  * @package   PHP_CodeSniffer
  * @author    Greg Sherwood <gsherwood@squiz.net>
@@ -11,23 +9,15 @@
  * @author    Ian Turgeon <iturgeon@gmail.com>
  * @copyright 2006-2012 Squiz Pty Ltd (ABN 77 084 670 600)
  * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
- * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-/**
- * A test to ensure that arrays conform to the array coding standard.
- *
- * @category  PHP
- * @package   PHP_CodeSniffer
- * @author    Greg Sherwood <gsherwood@squiz.net>
- * @author    Marc McIntyre <mmcintyre@squiz.net>
- * @author    Ian Turgeon <iturgeon@gmail.com>
- * @copyright 2006-2012 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
- * @version   Release: 1.4.8
- * @link      http://pear.php.net/package/PHP_CodeSniffer
- */
-class FuelPHP_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
+namespace FuelPHP\Sniffs\Arrays;
+
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
+use PHP_CodeSniffer\Util\Tokens;
+
+class ArrayDeclarationSniff implements Sniff
 {
     protected function findFirstNonWhiteSpaceOnLine($tokenIndex, $tokens)
     {
@@ -63,13 +53,13 @@ class FuelPHP_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sni
     /**
      * Processes this sniff, when one of its tokens is encountered.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile The current file being checked.
-     * @param int                  $stackPtr  The position of the current token in the
-     *                                        stack passed in $tokens.
+     * @param File $phpcsFile The current file being checked.
+     * @param int  $stackPtr  The position of the current token in the
+     *                        stack passed in $tokens.
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -280,7 +270,7 @@ class FuelPHP_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sni
 
                     // Find the value, which will be the first token on the line,
                     // excluding the leading whitespace.
-                    $valueContent = $phpcsFile->findPrevious(PHP_CodeSniffer_Tokens::$emptyTokens, ($nextToken - 1), null, true);
+                    $valueContent = $phpcsFile->findPrevious(Tokens::$emptyTokens, ($nextToken - 1), null, true);
                     while ($tokens[$valueContent]['line'] === $tokens[$nextToken]['line']) {
                         if ($valueContent === $arrayStart) {
                             // Value must have been on the same line as the array
@@ -344,7 +334,7 @@ class FuelPHP_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sni
         } else if (count($indices) === 1) {
             if ($lastToken === T_COMMA) {
                 // There may be another array value without a comma.
-                $exclude     = PHP_CodeSniffer_Tokens::$emptyTokens;
+                $exclude     = Tokens::$emptyTokens;
                 $exclude[]   = T_COMMA;
                 $nextContent = $phpcsFile->findNext($exclude, ($indices[0]['value'] + 1), $arrayEnd, true);
                 if ($nextContent === false) {
@@ -533,4 +523,3 @@ class FuelPHP_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sni
     } //end process()
 
 } //end class
-

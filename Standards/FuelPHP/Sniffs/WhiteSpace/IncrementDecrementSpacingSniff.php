@@ -1,33 +1,22 @@
 <?php
-
 /**
- * FuelPHP_Sniffs_WhiteSpace_IncrementDecrementSpacingSniff.
+ * IncrementDecrementSpacingSniff.
  *
- * PHP version 5
+ * Check that no space are used between variable and ++ or --.
  *
  * @category  PHP
  * @package   PHP_CodeSniffer
  * @author    Eric VILLARD <dev@eviweb.fr>
  * @copyright 2012 Eric VILLARD <dev@eviweb.fr>
  * @license   http://opensource.org/licenses/MIT MIT License
- * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-/**
- * FuelPHP_Sniffs_WhiteSpace_IncrementDecrementSpacingSniff.
- *
- * check that no space are used between variable and ++ or --.
- *
- * @category  PHP
- * @package   PHP_CodeSniffer
- * @author    Eric VILLARD <dev@eviweb.fr>
- * @copyright 2012 Eric VILLARD <dev@eviweb.fr>
- * @license   http://opensource.org/licenses/MIT MIT License
- * @version   Release: 1.0.0
- * @link      http://pear.php.net/package/PHP_CodeSniffer
- */
-class FuelPHP_Sniffs_WhiteSpace_IncrementDecrementSpacingSniff 
-    implements PHP_CodeSniffer_Sniff
+namespace FuelPHP\Sniffs\WhiteSpace;
+
+use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
+
+class IncrementDecrementSpacingSniff implements Sniff
 {
 
     /**
@@ -50,26 +39,26 @@ class FuelPHP_Sniffs_WhiteSpace_IncrementDecrementSpacingSniff
         return array(
             T_INC,
             T_DEC,
-            T_VARIABLE,            
+            T_VARIABLE,
         );
     }
 
     /**
      * Processes this test, when one of its tokens is encountered.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile All the tokens found in the document.
-     * @param int                  $stackPtr  The position of the current token in
-     *                                        the stack passed in $tokens.
+     * @param File $phpcsFile All the tokens found in the document.
+     * @param int  $stackPtr  The position of the current token in
+     *                        the stack passed in $tokens.
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
-        if ($tokens[$stackPtr]['code'] === T_INC 
+        if ($tokens[$stackPtr]['code'] === T_INC
             || $tokens[$stackPtr]['code'] === T_DEC
         ) {
-            if ($tokens[$stackPtr - 1]['code'] !== T_VARIABLE 
+            if ($tokens[$stackPtr - 1]['code'] !== T_VARIABLE
                 && $tokens[$stackPtr + 1]['code'] !== T_VARIABLE
             ) {
                 $error = 'Increment and decrement operators need to be close to ' .

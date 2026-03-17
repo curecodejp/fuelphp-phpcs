@@ -1,25 +1,6 @@
 <?php
-
 /**
- * FuelPHP_Sniffs_Classes_ClassDeclarationSniff.
- *
- * PHP version 5
- *
- * @category  PHP
- * @package   PHP_CodeSniffer
- * @author    Eric VILLARD <dev@eviweb.fr>
- * @copyright 2012 Eric VILLARD <dev@eviweb.fr>
- * @license   http://opensource.org/licenses/MIT MIT License
- * @link      http://pear.php.net/package/PHP_CodeSniffer
- */
-if (class_exists('PEAR_Sniffs_Classes_ClassDeclarationSniff', true) === false) {
-    throw new PHP_CodeSniffer_Exception(
-        'Class PEAR_Sniffs_Classes_ClassDeclarationSniff not found'
-    );
-}
-
-/**
- * FuelPHP_Sniffs_Classes_ClassDeclarationSniff
+ * ClassDeclarationSniff.
  *
  * Checks the declaration of a class or an interface is correct.
  *
@@ -28,22 +9,26 @@ if (class_exists('PEAR_Sniffs_Classes_ClassDeclarationSniff', true) === false) {
  * @author    Eric VILLARD <dev@eviweb.fr>
  * @copyright 2012 Eric VILLARD <dev@eviweb.fr>
  * @license   http://opensource.org/licenses/MIT MIT License
- * @version   Release: 1.0.0
- * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class FuelPHP_Sniffs_Classes_ClassDeclarationSniff extends PEAR_Sniffs_Classes_ClassDeclarationSniff
+
+namespace FuelPHP\Sniffs\Classes;
+
+use PHP_CodeSniffer\Files\File;
+use PHP_CodeSniffer\Standards\PEAR\Sniffs\Classes\ClassDeclarationSniff as PEARClassDeclarationSniff;
+
+class ClassDeclarationSniff extends PEARClassDeclarationSniff
 {
 
     /**
      * Processes this test, when one of its tokens is encountered.
      *
-     * @param PHP_CodeSniffer_File $phpcsFile The file being scanned.
-     * @param integer              $stackPtr  The position of the current token in the
-     *                                        stack passed in $tokens.
+     * @param File    $phpcsFile The file being scanned.
+     * @param int $stackPtr  The position of the current token in the
+     *                           stack passed in $tokens.
      *
      * @return void
      */
-    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    public function process(File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
         $errorData = array($tokens[$stackPtr]['content']);
@@ -56,7 +41,7 @@ class FuelPHP_Sniffs_Classes_ClassDeclarationSniff extends PEAR_Sniffs_Classes_C
         );
         if (preg_match('/^\{\s*\}$/', $body)) {
             if (preg_match('/\s/', $body)) {
-                $error = 'Opening and closing braces of an empty %s must be on ' . 
+                $error = 'Opening and closing braces of an empty %s must be on ' .
                     'the same line as the definition, with no spaces between them.';
                 $phpcsFile->addError(
                     $error, $stackPtr, 'EmptyBodyBraces', $errorData
@@ -76,7 +61,4 @@ class FuelPHP_Sniffs_Classes_ClassDeclarationSniff extends PEAR_Sniffs_Classes_C
         }
     } //end process()
 
-}
-
-//end class
-?>
+} //end class
