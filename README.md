@@ -1,23 +1,34 @@
 # PHP_CodeSniffer FuelPHP Standard
 
-PHP Code Sniffer rules that cover a large part of the [FuelPHP coding standards](http://docs.fuelphp.com/general/coding_standards.html).
+English | [日本語](README.ja.md)
 
-## 要件
+PHP_CodeSniffer rules that cover a large part of the [FuelPHP coding standards](http://docs.fuelphp.com/general/coding_standards.html).
+
+> This README is the source of truth. When you change it, update [README.ja.md](README.ja.md) in the same pull request.
+
+## About this fork
+
+This is a fork of [eviweb/fuelphp-phpcs](https://github.com/eviweb/fuelphp-phpcs). The upstream has not been updated since 2020 and supports PHP_CodeSniffer 2.x only. This fork ports all custom sniffs to PHP_CodeSniffer 3.x (v2.0.0).
+
+- The package name is still `eviweb/fuelphp-phpcs`.
+- The package of the same name on Packagist is the upstream v1.x. This fork (v2.x) is not on Packagist; add this repository to `repositories` in your `composer.json` (see below).
+
+## Requirements
 
 - PHP >= 8.0
-- PHP_CodeSniffer >= 3.0
+- PHP_CodeSniffer 3.x (3.1 or later)
 
-## インストール
+## Installation
 
-### 1. composer.json に追加
+### 1. Add to composer.json
 
-`composer.json` の `repositories` にこのパッケージのリポジトリを追加し、`require-dev` に依存関係を追加します。
+Add this repository to `repositories` and the dependencies to `require-dev` in your `composer.json`.
 
 ```json
 {
     "repositories": [
         {
-            "type": "git",
+            "type": "vcs",
             "url": "https://github.com/curecodejp/fuelphp-phpcs.git",
             "only": ["eviweb/fuelphp-phpcs"]
         }
@@ -35,83 +46,87 @@ PHP Code Sniffer rules that cover a large part of the [FuelPHP coding standards]
 }
 ```
 
-### 2. インストール実行
+### 2. Install
 
 ```bash
 composer update squizlabs/php_codesniffer eviweb/fuelphp-phpcs dealerdirect/phpcodesniffer-composer-installer
 ```
 
-`dealerdirect/phpcodesniffer-composer-installer` が自動的に FuelPHP スタンダードを phpcs に登録します。
+If your project has no `composer.lock` yet, run `composer update` without package names instead.
 
-### 3. インストール確認
+`dealerdirect/phpcodesniffer-composer-installer` registers the FuelPHP standard with phpcs automatically.
+
+### 3. Verify the installation
+
+The examples below assume the typical FuelPHP layout, where `vendor-dir` is `fuel/vendor`. If your project uses Composer's default layout, use `./vendor/bin/phpcs` and `./vendor/bin/phpcbf` instead (check with `composer config bin-dir`).
 
 ```bash
-# phpcs のバージョン確認
-./vendor/bin/phpcs --version
+# Check the phpcs version
+./fuel/vendor/bin/phpcs --version
 # PHP_CodeSniffer version 3.x.x ...
 
-# FuelPHP スタンダードが登録されていることを確認
-./vendor/bin/phpcs -i
+# Check that the FuelPHP standard is registered
+./fuel/vendor/bin/phpcs -i
 # The installed coding standards are ... FuelPHP ...
 
-# 利用可能なスニフ一覧
-./vendor/bin/phpcs --standard=FuelPHP -e
+# List the available sniffs
+./fuel/vendor/bin/phpcs --standard=FuelPHP -e
 ```
 
-## 使い方
+## Usage
 
-### 基本的な使い方
+### Basic usage
 
 ```bash
-# ディレクトリ全体をチェック
-./vendor/bin/phpcs --standard=FuelPHP fuel/app/classes/
+# Check a whole directory
+./fuel/vendor/bin/phpcs --standard=FuelPHP fuel/app/classes/
 
-# 特定のファイルをチェック
-./vendor/bin/phpcs --standard=FuelPHP fuel/app/classes/util.php
+# Check a single file
+./fuel/vendor/bin/phpcs --standard=FuelPHP fuel/app/classes/util.php
 ```
 
-### プロジェクト固有の設定（phpcs.xml）
+### Project-specific settings (phpcs.xml)
 
-プロジェクトルートに `phpcs.xml` を作成すると、プロジェクト固有のルール除外やパス設定ができます。
+Create `phpcs.xml` in your project root to exclude rules or set paths for your project.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <ruleset name="MyProject">
     <description>MyProject coding standard based on FuelPHP</description>
 
-    <!-- FuelPHP スタンダードをベースにする -->
+    <!-- Use the FuelPHP standard as the base -->
     <rule ref="FuelPHP">
-        <!-- 不要なルールを除外する例 -->
+        <!-- Example: exclude rules you do not need -->
         <exclude name="FuelPHP.NamingConventions.ConciseUnderscoredVariableName.NotUnderscore"/>
         <exclude name="FuelPHP.NamingConventions.LowerCaseFileName.UpperCaseInFileName"/>
     </rule>
 
-    <!-- チェック対象のディレクトリ -->
+    <!-- Directories to check -->
     <file>fuel/app/classes</file>
     <file>fuel/app/views</file>
     <file>fuel/app/tasks</file>
 
-    <!-- チェック除外するディレクトリ -->
+    <!-- Directories to skip -->
     <exclude-pattern>fuel/app/vendor/*</exclude-pattern>
     <exclude-pattern>fuel/core/*</exclude-pattern>
     <exclude-pattern>fuel/packages/*</exclude-pattern>
 </ruleset>
 ```
 
-`phpcs.xml` を使う場合:
+With `phpcs.xml`:
 
 ```bash
-# phpcs.xml を自動検出（プロジェクトルートで実行）
-./vendor/bin/phpcs
+# phpcs.xml is detected automatically when run from the project root
+./fuel/vendor/bin/phpcs
 
-# 明示的に指定
-./vendor/bin/phpcs --standard=phpcs.xml fuel/app/classes/
+# Or specify it explicitly
+./fuel/vendor/bin/phpcs --standard=phpcs.xml fuel/app/classes/
 ```
 
-### VSCode との連携
+### VS Code integration
 
-1. VSCode 拡張 `shevaua.phpcs` をインストール
-2. `.vscode/settings.json` に以下を追加:
+1. Install the VS Code extension [`johnrdorazio.vscode-phpcs`](https://marketplace.visualstudio.com/items?itemName=johnrdorazio.vscode-phpcs), the maintained successor of `shevaua.phpcs`.
+2. Add the following to `.vscode/settings.json`:
 
 ```json
 {
@@ -120,49 +135,50 @@ composer update squizlabs/php_codesniffer eviweb/fuelphp-phpcs dealerdirect/phpc
 }
 ```
 
-> **Note**: `fuel/vendor/bin/phpcs` のパスはプロジェクトの composer の `vendor-dir` 設定に依存します。通常の FuelPHP プロジェクトでは `fuel/vendor/bin/phpcs` です。
+> **Note**: The path `fuel/vendor/bin/phpcs` depends on the `vendor-dir` setting in your project's composer configuration. With Composer's default layout, it is `vendor/bin/phpcs`.
 
-### 自動修正（phpcbf）
+### Automatic fixes (phpcbf)
 
-一部のエラーは `phpcbf` で自動修正できます:
+Some errors can be fixed automatically with `phpcbf`:
 
 ```bash
-./vendor/bin/phpcbf --standard=FuelPHP fuel/app/classes/
+./fuel/vendor/bin/phpcbf --standard=FuelPHP fuel/app/classes/
 ```
 
-## 含まれるスニフ一覧
+## Included sniffs
 
-### カスタムスニフ（FuelPHP 固有）
+### Custom sniffs (FuelPHP-specific)
 
-| スニフ | 説明 |
+| Sniff | Description |
 |---|---|
-| `FuelPHP.Arrays.ArrayDeclaration` | 配列宣言のフォーマット（アライメント、改行等） |
-| `FuelPHP.Classes.ClassDeclaration` | クラス/インターフェース宣言のフォーマット |
-| `FuelPHP.Formatting.BracesOnNewLine` | 制御構造の括弧を次の行に配置（Allman スタイル） |
-| `FuelPHP.NamingConventions.ConciseUnderscoredVariableName` | 変数名はアンダースコア形式、30文字以内 |
-| `FuelPHP.NamingConventions.LowerCaseFileName` | ファイル名はすべて小文字 |
-| `FuelPHP.NamingConventions.UnderscoredWithScopeFunctionName` | メソッド名はアンダースコア形式、可視性を明示 |
-| `FuelPHP.WhiteSpace.ControlStructureSpacing` | 制御構造の括弧周りのスペース |
-| `FuelPHP.WhiteSpace.DisallowSpaceIndent` | インデントはタブのみ（スペース禁止） |
-| `FuelPHP.WhiteSpace.IncrementDecrementSpacing` | `++`/`--` と変数の間にスペースなし |
-| `FuelPHP.WhiteSpace.NotOperatorSpacing` | `!` 演算子の前後にスペース必須 |
+| `FuelPHP.Arrays.ArrayDeclaration` | Array declaration format (alignment, line breaks, etc.) |
+| `FuelPHP.Classes.ClassDeclaration` | Class / interface declaration format |
+| `FuelPHP.Formatting.BracesOnNewLine` | Braces of control structures on the next line (Allman style) |
+| `FuelPHP.NamingConventions.ConciseUnderscoredVariableName` | Variable names in underscore style, 30 characters or fewer |
+| `FuelPHP.NamingConventions.LowerCaseFileName` | File names all lowercase |
+| `FuelPHP.NamingConventions.UnderscoredWithScopeFunctionName` | Method names in underscore style with explicit visibility |
+| `FuelPHP.WhiteSpace.ControlStructureSpacing` | Spacing around parentheses of control structures |
+| `FuelPHP.WhiteSpace.DisallowSpaceIndent` | Indent with tabs only (no spaces) |
+| `FuelPHP.WhiteSpace.IncrementDecrementSpacing` | No space between `++` / `--` and the variable |
+| `FuelPHP.WhiteSpace.NotOperatorSpacing` | Spaces required around the `!` operator |
 
-### 外部スニフ（phpcs 標準ルール）
+### External sniffs (standard phpcs rules)
 
-Generic, PEAR, Squiz, Zend から 19 個のスニフを利用しています。
-詳細は `Standards/FuelPHP/ruleset.xml` を参照してください。
+19 sniffs from Generic, PEAR, Squiz and Zend are used.
+See `Standards/FuelPHP/ruleset.xml` for details.
 
-## phpcs 2.x からの移行
+## Migrating from phpcs 2.x
 
-phpcs 2.x（v1.x）から移行する場合:
+To migrate from phpcs 2.x (v1.x):
 
-1. `composer.json` の `squizlabs/php_codesniffer` を `"^3.0"` に変更
-2. `eviweb/fuelphp-phpcs` を `"^2.0"` に変更
-3. `dealerdirect/phpcodesniffer-composer-installer` を追加
-4. `phpcs.xml` でスニフ名の短縮形を使っている場合、正式名に修正
-   - 例: `UnderscoredWithScope` → `UnderscoredWithScopeFunctionName`
-5. `composer update` を実行
+1. Add this repository to `repositories` and allow the plugin in `config.allow-plugins`, as in [1. Add to composer.json](#1-add-to-composerjson).
+2. Change `squizlabs/php_codesniffer` in `composer.json` to `"^3.0"`.
+3. Change `eviweb/fuelphp-phpcs` to `"^2.0"`.
+4. Add `dealerdirect/phpcodesniffer-composer-installer` (`"^1.0"`).
+5. If `phpcs.xml` uses shortened sniff names, change them to the full names.
+   - Example: `UnderscoredWithScope` → `UnderscoredWithScopeFunctionName`
+6. Run the package-scoped `composer update` from [2. Install](#2-install) so that unrelated dependencies are not upgraded. Add `-W` (`--with-all-dependencies`) if Composer reports that locked dependencies block the update. If your project has no `composer.lock`, run `composer update` without package names.
 
-## ライセンス
+## License
 
 MIT License
