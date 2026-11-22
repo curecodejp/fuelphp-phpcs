@@ -58,19 +58,19 @@ composer update squizlabs/php_codesniffer eviweb/fuelphp-phpcs dealerdirect/phpc
 
 ### 3. インストール確認
 
-以下の例は `./vendor/bin/phpcs` で書いています。通常の FuelPHP プロジェクトは `vendor-dir` が `fuel/vendor` なので、`./fuel/vendor/bin/phpcs` に読み替えてください（`composer config bin-dir` で確認できます）。
+以下の例は、`vendor-dir` が `fuel/vendor` の通常の FuelPHP プロジェクトを前提に書いています。Composer の既定の構成のプロジェクトでは、`./vendor/bin/phpcs`・`./vendor/bin/phpcbf` に読み替えてください（`composer config bin-dir` で確認できます）。
 
 ```bash
 # phpcs のバージョン確認
-./vendor/bin/phpcs --version
+./fuel/vendor/bin/phpcs --version
 # PHP_CodeSniffer version 3.x.x ...
 
 # FuelPHP スタンダードが登録されていることを確認
-./vendor/bin/phpcs -i
+./fuel/vendor/bin/phpcs -i
 # The installed coding standards are ... FuelPHP ...
 
 # 利用可能なスニフ一覧
-./vendor/bin/phpcs --standard=FuelPHP -e
+./fuel/vendor/bin/phpcs --standard=FuelPHP -e
 ```
 
 ## 使い方
@@ -79,10 +79,10 @@ composer update squizlabs/php_codesniffer eviweb/fuelphp-phpcs dealerdirect/phpc
 
 ```bash
 # ディレクトリ全体をチェック
-./vendor/bin/phpcs --standard=FuelPHP fuel/app/classes/
+./fuel/vendor/bin/phpcs --standard=FuelPHP fuel/app/classes/
 
 # 特定のファイルをチェック
-./vendor/bin/phpcs --standard=FuelPHP fuel/app/classes/util.php
+./fuel/vendor/bin/phpcs --standard=FuelPHP fuel/app/classes/util.php
 ```
 
 ### プロジェクト固有の設定（phpcs.xml）
@@ -117,15 +117,15 @@ composer update squizlabs/php_codesniffer eviweb/fuelphp-phpcs dealerdirect/phpc
 
 ```bash
 # phpcs.xml を自動検出（プロジェクトルートで実行）
-./vendor/bin/phpcs
+./fuel/vendor/bin/phpcs
 
 # 明示的に指定
-./vendor/bin/phpcs --standard=phpcs.xml fuel/app/classes/
+./fuel/vendor/bin/phpcs --standard=phpcs.xml fuel/app/classes/
 ```
 
 ### VSCode との連携
 
-1. VSCode 拡張 `shevaua.phpcs` をインストール
+1. VSCode 拡張 [`johnrdorazio.vscode-phpcs`](https://marketplace.visualstudio.com/items?itemName=johnrdorazio.vscode-phpcs) をインストール（更新が止まった `shevaua.phpcs` の後継）
 2. `.vscode/settings.json` に以下を追加:
 
 ```json
@@ -135,14 +135,14 @@ composer update squizlabs/php_codesniffer eviweb/fuelphp-phpcs dealerdirect/phpc
 }
 ```
 
-> **Note**: `fuel/vendor/bin/phpcs` のパスはプロジェクトの composer の `vendor-dir` 設定に依存します。通常の FuelPHP プロジェクトでは `fuel/vendor/bin/phpcs` です。
+> **Note**: `fuel/vendor/bin/phpcs` のパスはプロジェクトの composer の `vendor-dir` 設定に依存します。Composer の既定の構成では `vendor/bin/phpcs` です。
 
 ### 自動修正（phpcbf）
 
 一部のエラーは `phpcbf` で自動修正できます:
 
 ```bash
-./vendor/bin/phpcbf --standard=FuelPHP fuel/app/classes/
+./fuel/vendor/bin/phpcbf --standard=FuelPHP fuel/app/classes/
 ```
 
 ## 含まれるスニフ一覧
@@ -177,7 +177,7 @@ phpcs 2.x（v1.x）から移行する場合:
 4. `dealerdirect/phpcodesniffer-composer-installer`（`"^1.0"`）を追加
 5. `phpcs.xml` でスニフ名の短縮形を使っている場合、正式名に修正
    - 例: `UnderscoredWithScope` → `UnderscoredWithScopeFunctionName`
-6. `composer update` を実行
+6. 関係のない依存パッケージまで更新しないよう、[2. インストール実行](#2-インストール実行) のパッケージ名を付けた `composer update` を実行する。ロック済みの依存パッケージが原因で更新できないと表示されたら `-W`（`--with-all-dependencies`）を付ける。`composer.lock` が無い場合は、パッケージ名を付けずに `composer update` を実行する
 
 ## ライセンス
 

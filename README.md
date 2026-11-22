@@ -58,19 +58,19 @@ If your project has no `composer.lock` yet, run `composer update` without packag
 
 ### 3. Verify the installation
 
-The examples below use `./vendor/bin/phpcs`. A typical FuelPHP project sets `vendor-dir` to `fuel/vendor`, so use `./fuel/vendor/bin/phpcs` there (check with `composer config bin-dir`).
+The examples below assume the typical FuelPHP layout, where `vendor-dir` is `fuel/vendor`. If your project uses Composer's default layout, use `./vendor/bin/phpcs` and `./vendor/bin/phpcbf` instead (check with `composer config bin-dir`).
 
 ```bash
 # Check the phpcs version
-./vendor/bin/phpcs --version
+./fuel/vendor/bin/phpcs --version
 # PHP_CodeSniffer version 3.x.x ...
 
 # Check that the FuelPHP standard is registered
-./vendor/bin/phpcs -i
+./fuel/vendor/bin/phpcs -i
 # The installed coding standards are ... FuelPHP ...
 
 # List the available sniffs
-./vendor/bin/phpcs --standard=FuelPHP -e
+./fuel/vendor/bin/phpcs --standard=FuelPHP -e
 ```
 
 ## Usage
@@ -79,10 +79,10 @@ The examples below use `./vendor/bin/phpcs`. A typical FuelPHP project sets `ven
 
 ```bash
 # Check a whole directory
-./vendor/bin/phpcs --standard=FuelPHP fuel/app/classes/
+./fuel/vendor/bin/phpcs --standard=FuelPHP fuel/app/classes/
 
 # Check a single file
-./vendor/bin/phpcs --standard=FuelPHP fuel/app/classes/util.php
+./fuel/vendor/bin/phpcs --standard=FuelPHP fuel/app/classes/util.php
 ```
 
 ### Project-specific settings (phpcs.xml)
@@ -117,15 +117,15 @@ With `phpcs.xml`:
 
 ```bash
 # phpcs.xml is detected automatically when run from the project root
-./vendor/bin/phpcs
+./fuel/vendor/bin/phpcs
 
 # Or specify it explicitly
-./vendor/bin/phpcs --standard=phpcs.xml fuel/app/classes/
+./fuel/vendor/bin/phpcs --standard=phpcs.xml fuel/app/classes/
 ```
 
 ### VS Code integration
 
-1. Install the VS Code extension `shevaua.phpcs`.
+1. Install the VS Code extension [`johnrdorazio.vscode-phpcs`](https://marketplace.visualstudio.com/items?itemName=johnrdorazio.vscode-phpcs), the maintained successor of `shevaua.phpcs`.
 2. Add the following to `.vscode/settings.json`:
 
 ```json
@@ -135,14 +135,14 @@ With `phpcs.xml`:
 }
 ```
 
-> **Note**: The path `fuel/vendor/bin/phpcs` depends on the `vendor-dir` setting in your project's composer configuration. It is `fuel/vendor/bin/phpcs` in a typical FuelPHP project.
+> **Note**: The path `fuel/vendor/bin/phpcs` depends on the `vendor-dir` setting in your project's composer configuration. With Composer's default layout, it is `vendor/bin/phpcs`.
 
 ### Automatic fixes (phpcbf)
 
 Some errors can be fixed automatically with `phpcbf`:
 
 ```bash
-./vendor/bin/phpcbf --standard=FuelPHP fuel/app/classes/
+./fuel/vendor/bin/phpcbf --standard=FuelPHP fuel/app/classes/
 ```
 
 ## Included sniffs
@@ -177,7 +177,7 @@ To migrate from phpcs 2.x (v1.x):
 4. Add `dealerdirect/phpcodesniffer-composer-installer` (`"^1.0"`).
 5. If `phpcs.xml` uses shortened sniff names, change them to the full names.
    - Example: `UnderscoredWithScope` → `UnderscoredWithScopeFunctionName`
-6. Run `composer update`.
+6. Run the package-scoped `composer update` from [2. Install](#2-install) so that unrelated dependencies are not upgraded. Add `-W` (`--with-all-dependencies`) if Composer reports that locked dependencies block the update. If your project has no `composer.lock`, run `composer update` without package names.
 
 ## License
 
